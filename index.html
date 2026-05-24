@@ -243,7 +243,7 @@
         */
 
         // AI機能を使う場合はGemini APIキーを入力
-        const apiKey = "AIzaSyAUCBMg2At6lEmkoPnaidxUAPz9THITemI"; 
+       const apiKey = "AIzaSyAUCBMg2At6lEmkoPnaidxUAPz9THITemI"; 
 
         // ==========================================
 
@@ -456,8 +456,15 @@
                     else if (roomData.ladders.find(l => l.r === r && l.c === col)) col++;
                 }
 
-                if (p.name.includes("ミナミ") || p.name.includes("みなみ")) minamiEndCol = col;
-                if (p.name.includes("ナンポ") || p.name.includes("なんぽ")) nanpoEndCol = col;
+                const isNanpo = ["ナンポ", "なんぽ", "南保"].some(n => p.name.includes(n));
+                const isMinami = ["南", "みなみ", "ミナミ"].some(n => p.name.includes(n));
+                
+                // 「南保」に「南」が含まれるため、先にナンポの判定を優先して誤判定を防ぐ
+                if (isNanpo) {
+                    nanpoEndCol = col;
+                } else if (isMinami) {
+                    minamiEndCol = col;
+                }
             }
 
             // もし二人が同じチームになってしまった場合
